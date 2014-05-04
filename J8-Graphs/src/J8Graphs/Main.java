@@ -3,6 +3,7 @@ package J8Graphs;
 /**
  * Launcher
  * @author Undisputed
+ * @author normo
  *
  */
 public class Main {
