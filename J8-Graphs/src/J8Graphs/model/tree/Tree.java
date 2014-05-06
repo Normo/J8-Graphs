@@ -64,7 +64,6 @@ public class Tree extends DiGraph {
 	 * Wurzelknoten markiert bzw. gesetzt wird.
 	 */
 	public boolean insertNode(Node node) {
-		System.out.println("Rufe überschriebene insertNode-Methode der Tree-Klasse auf..");
 		if(this.isEmpty() && this.add(node)) {
 			this.root = node;
 			this.nodeAmount = this.size();

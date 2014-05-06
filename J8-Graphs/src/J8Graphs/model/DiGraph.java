@@ -1,5 +1,7 @@
 package J8Graphs.model;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -26,6 +28,21 @@ public class DiGraph extends LinkedList<Node> {
 	 * Anzahl der Kanten im DiGraph.
 	 */
 	public int arcAmount;
+	
+	/**
+	 * Label, das angibt, ob der DiGraph einen Kreis enthält.
+	 */
+	public boolean cycleFound = false;
+	
+	/**
+	 * Liste, in der ein Pfad abgespeichert wird, der einen Kreis darstellt.
+	 */
+	public LinkedList<Node> cyclePath;
+	
+	/**
+	 * Liste, in der eine topologische Sortierung gespeichert wird.
+	 */
+	public LinkedList<Node> topoSort;
 	
 	/**
 	 * Leerer Konstruktor. Erzeugt einen leeren Graphen.
@@ -102,39 +119,40 @@ public class DiGraph extends LinkedList<Node> {
 	public void iterateOverInArcs(Node node) {
 		
 	}
-	
-	//TODO einfügen/löschen von Kanten/Knoten
-	//TODO Test, ob es eine Kante (v,w) existiert
-	//TODO Iteration über die Nachbarschaft eines Knoten
 
 	/**
-	 * Tiefensuche.
-	 * @param startNode Startknoten, bei dem die Teifensuche starten soll
-	 * @return Tree - alle von startNode aus erreichbaren Knoten als Tiefensuche-Baum
+	 * Graph Scan Algorithmus mit Tiefensuche-Strategie und Zeitstempeln. Gibt nur
+	 * die vom Startknoten aus erreichbaren Knoten als Baum zurück.
+	 * @param startNode Startknoten, bei dem der Scanning Algorithmus beginnen soll
+	 * @return alle von startNode aus erreichbaren Knoten als Tiefensuche-Baum
 	 */
-	public Tree depthFirstSearch(Node startNode) {
+	public Tree graphScanDFS(Node startNode) {
 		
-		System.out.println("Starte DFS...");
+		this.resetLabels();					// setze alle Knotenmarkierungen zurück
 		
 		Tree dfsTree = new Tree(startNode);	// DFS-Baum
 		Stack<Node> stack = new Stack<>();	// Menge der betrachteten Knoten
-
-		stack.push(startNode);				// Füge Startknoten zum Stack hinzu
-		startNode.visited(true);			// und markieren ihn als besucht
+		int time = 0;
 		
-		Node currentNode;			// aktuell betrachteter Knoten
-		boolean noUnvisitedNode;	// gibt an, ob der aktuelle Knoten noch unbesuchte Nachfolger hat
+		stack.push(startNode);				// Füge Startknoten zum Stack hinzu,
+		startNode.visited(true);			// markiere ihn als besucht
+		startNode.discovered(time);			// und vergebe Zeitstempel 0.
+		
+		Node currentNode;					// aktuell betrachteter Knoten
+		boolean noUnvisitedNode;			// gibt an, ob der aktuelle Knoten noch unbesuchte Nachfolger hat
 		
 		while (!stack.isEmpty()) {
-			currentNode = stack.peek();	// hole den obersten Knoten vom Stack, ohne ihn zu entfernen
-			noUnvisitedNode = true;		// gehe standardmäßig davon aus, dass alle Nachfolgerknoten besucht wurden
+			currentNode = stack.peek();		// hole den obersten Knoten vom Stack, ohne ihn zu entfernen
+			noUnvisitedNode = true;			// gehe standardmäßig davon aus, dass alle Nachfolgerknoten besucht wurden
 			
 			// Iteration über die ausgehenden Kanten des aktuell betrachteten Knoten
 			for (Arc outgoingArc : currentNode.outArcs) {
 				
-				// ist Nachfolgeknoten noch unbesucht, füge ihn zum Stack + DFS-Baum hinzu und markiere ihn als besucht
+				// ist der Nachfolgeknoten noch unbesucht, füge ihn zum Stack + DFS-Baum hinzu und markiere ihn als besucht
 				if (!outgoingArc.targetNode.isVisited()){
 					outgoingArc.targetNode.visited(true);
+					time++;
+					outgoingArc.targetNode.discovered(time);
 					stack.push(outgoingArc.targetNode);
 					dfsTree.insertNode(outgoingArc.targetNode);
 					dfsTree.addArc(outgoingArc);
@@ -145,26 +163,105 @@ public class DiGraph extends LinkedList<Node> {
 			
 			// wurde alle Nachfolgeknoten betrachtet, nehme den aktuell betrachteten Knoten vom Stack herunter
 			if (noUnvisitedNode) {
+				time++;
+				currentNode.finish(time);
 				stack.pop();
 			}	
 		}
-		
-		//setze alle Knotenmarkierungen zurück auf false
-		this.resetLabels();
-		
-		System.out.println("Beende DFS...");
 		
 		return dfsTree;
 	}
 
 	/**
-	 * Breitensuche.
+	 * Interne DFS-Methode für die Tiefensuche im kompletten DiGraph.
+	 * @param startNode neuer Startknoten, von dem die DFS ausgehen soll
+	 * @param time aktueller Zeitstempel
+	 * @return alle von startNode aus erreichbaren Knoten als Tiefensuche-Baum
+	 */
+	private Tree dfs(Node startNode, int time) {
+				
+		Tree dfsTree = new Tree(startNode);	// DFS-Baum
+		Stack<Node> stack = new Stack<>();	// Menge der betrachteten Knoten
+		int t = time;
+		
+		stack.push(startNode);				// Füge Startknoten zum Stack hinzu,
+		startNode.visited(true);			// markiere ihn als besucht
+		startNode.discovered(t);			// und vergebe Zeitstempel 0.
+		
+		Node currentNode;					// aktuell betrachteter Knoten
+		boolean noUnvisitedNode;			// gibt an, ob der aktuelle Knoten noch unbesuchte Nachfolger hat
+		
+		while (!stack.isEmpty()) {
+			currentNode = stack.peek();		// hole den obersten Knoten vom Stack, ohne ihn zu entfernen
+			noUnvisitedNode = true;			// gehe standardmäßig davon aus, dass alle Nachfolgerknoten besucht wurden
+			
+			// Iteration über die ausgehenden Kanten des aktuell betrachteten Knoten
+			for (Arc outgoingArc : currentNode.outArcs) {
+				
+				// ist der Nachfolgeknoten noch unbesucht, füge ihn zum Stack + DFS-Baum hinzu und markiere ihn als besucht
+				if (!outgoingArc.targetNode.isVisited()){
+					outgoingArc.targetNode.visited(true);
+					t++;
+					outgoingArc.targetNode.discovered(t);
+					stack.push(outgoingArc.targetNode);
+					dfsTree.insertNode(outgoingArc.targetNode);
+					dfsTree.addArc(outgoingArc);
+					noUnvisitedNode = false;
+					break;
+				}
+			}
+			
+			// wurden alle Nachfolgeknoten betrachtet, nehme den aktuell betrachteten Knoten vom Stack herunter
+			if (noUnvisitedNode) {
+				t++;									// inkrementiere Zeitstempel
+				currentNode.finish(t);					// setze finish-Time
+				this.topoSort.addFirst(currentNode);	// füge abgearbeiteten Knoten zur topoSort-Liste hinzu
+				stack.pop();							// entferne den Knoten vom Stack
+			}	
+		}
+				
+		return dfsTree;
+	}
+	
+	/**
+	 * Tiefensuche mit Zeitstempeln im kompletten DiGraph. Gibt einen Tiefensuche-Wald
+	 * zurück in Form einer ArrayList.
+	 * @param startNode Startknoten, bei dem die Tiefensuche beginnt
+	 * @return Tiefensuche-Wald
+	 */
+	public ArrayList<Tree> depthFirstSearch(Node startNode) {
+		
+		this.resetLabels();
+		
+		this.topoSort = new LinkedList<>();
+		
+		ArrayList<Tree> forest = new ArrayList<>();
+		Tree dfsTree;
+		int time = 0;
+		
+		dfsTree = this.dfs(startNode, time);
+		time = dfsTree.root.finishTime;
+		forest.add(dfsTree);
+		
+		for (Node node : this) {
+			if(node.finishTime == -1) {
+				dfsTree = this.dfs(node, (time+1));
+				time = dfsTree.root.finishTime;
+				forest.add(dfsTree);
+			}
+		}
+				
+		return forest;
+	}
+	
+	/**
+	 * Graph Scan Algorithmus mit Breitensuche-Strategie.
 	 * @param startNode Startknoten, bei dem die Breitensuche beginnt
 	 * @return Tree - alle von startNode aus erreichbaren Knoten als Breitensuche-Baum
 	 */
 	public Tree breadthFirstSearch(Node startNode) {
 		
-		System.out.println("Start BFS..");
+		this.resetLabels();						// setze alle Knotenmarkierungen zurück
 		
 		Tree bfsTree = new Tree(startNode);		// BFS-Baum
 		Queue<Node> queue = new LinkedList<>();	// Warteschlange
@@ -194,13 +291,113 @@ public class DiGraph extends LinkedList<Node> {
 				queue.poll();
 			}
 		}
+				
+		return bfsTree;
+		
+	}
+	
+	/**
+	 * Topologische Sortierung.
+	 * @return Liste der topologischen Sortierung
+	 */
+	public boolean topologicalSorting() {
+				
+		this.resetLabels();
+		this.cyclePath = new LinkedList<>();
+		
+		this.cycleExists(); //prüfe, ob es einen Zyklus gibt
+
+		if(this.cycleFound) {
+			// Wenn ein Zyklus gefunden wurde,
+			// lösche die Knoten in cyclePath, die nicht zum zyklus gehören
+			
+			int cylceNodeId = this.cyclePath.get(this.cyclePath.size()-1).Id;	// ID des Knotens, bei dem der Zyklus entdeckt wurde
+			int pathLength = this.cyclePath.size();
+			
+			for (int i = 0; i < pathLength; i++) {
+				// lösche alle Knoten in cyclePath bis zum ersten Auftreten des Knotens mit der ID cycleNodeId
+				if(this.cyclePath.getFirst().Id != cylceNodeId) {
+					this.cyclePath.removeFirst();
+					continue;
+				} else {
+					// Zyklusanfang gefunden, cyclePath enthält nur Knoten, die zum Zyklus gehören
+					break;
+				}
+			}
+			//return this.cyclePath;
+			return false;
+		} else {
+			// wenn kein Zyklus existiert, führe Tiefensuche mit Timestamps durch
+			// immer wenn ein Knoten eine Finish-Zeit erhält wird er vorne an die topoSort-Liste angefügt
+			long start = new Date().getTime();
+			this.depthFirstSearch(this.getFirst());
+			long runningTime = new Date().getTime() - start;
+			System.out.println("Laufzeit: " + runningTime + " ms");
+			//return this.topoSort;
+			return true;
+		}
+	}
+	
+	/**
+	 * Prüft, ob ein Kreis im DiGraph vorhanden ist und setzt die globale Variable
+	 * cycleFound auf TRUE, wenn ein Zyklus existiert.
+	 * @return TRUE, wenn ein Kreis existiert
+	 */
+	private boolean cycleExists() {
 		
 		this.resetLabels();
 		
-		System.out.println("End BFS..");
+		this.cyclePath = new LinkedList<>();
 		
-		return bfsTree;
-		
+		this.cycleDFS(this.getFirst());
+
+		if (this.cycleFound) {
+			return true;
+		} else {
+			for (Node node : this) {
+				if(node.visited == false) {
+					this.cycleDFS(node);
+					if (this.cycleFound) {
+						System.out.println("Pfadlänge: " + this.cyclePath.size() +"\n");
+						return true;
+					}
+				}
+			}
+		}
+		return this.cycleFound;
+	}
+	
+	/**
+	 * Interne tiefensuche-ähnliche Methode, die rekursive aufgerufen wird, um
+	 * Zyklen im DiGraph zu finden. 
+	 * @param node Knoten, der besucht werden soll
+	 */
+	private void cycleDFS(Node node) {
+		if (this.cycleFound) {
+			return;
+		} else {
+			if (node.finished) {
+				return;
+			}
+			if (node.visited) {
+//				System.out.println("Zyklus gefunden bei Knoten " + node.Id  );
+				this.cycleFound = true;
+//				System.out.println("###############!!!!!!!!!!!!!!!!!!!!!!####################################");
+				this.cyclePath.add(node);
+//				this.cyclePath.forEach(n -> System.out.print(n.Id + " -> "));
+//				System.out.println("Pfadlänge: " + this.cyclePath.size() +"\n");
+				return;
+			}
+			node.visited(true);
+			this.cyclePath.add(node);
+			for (Arc arc : node.outArcs) {
+				this.cycleDFS(arc.targetNode);
+			}
+			node.finished(true);
+			if (!this.cycleFound) {
+				this.cyclePath.remove(this.cyclePath.size()-1);
+			}
+		}
 	}
 	
 	/**
@@ -222,8 +419,21 @@ public class DiGraph extends LinkedList<Node> {
 		for (Node node : this) {
 			node.resetLabels();
 		}
-		
-		
 	}
 	
+	/**
+	 * toString-Methode
+	 */
+	public String toString() {
+		StringBuilder sb = new StringBuilder("n " + this.size() + " m " + this.arcAmount);
+		
+		this.forEach((Node node) -> {
+			if(node.outArcs.size() > 0) {
+				for (Arc arc : node.outArcs)
+				sb.append("\n" + arc );
+			}
+		});
+		
+		return sb.toString();
+	}
 }

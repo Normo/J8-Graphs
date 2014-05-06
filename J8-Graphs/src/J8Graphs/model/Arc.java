@@ -34,11 +34,10 @@ public class Arc {
 		this.targetNode = target;
 		this.Id = Integer.parseInt(this.startNode.Id + "" + this.targetNode.Id);
 	}
-
-	public String debugString() {
-		return "Kante " + this.Id + " [" + this.startNode.Id + "," +this.targetNode.Id +"]";
-	}
 	
+	/**
+	 * Überschriebene toString-Methode.
+	 */
 	public String toString() {
 		return "e " + this.startNode.Id + " " + this.targetNode.Id;
 	}

@@ -45,7 +45,6 @@ public class GraphReader {
 				} else if (splittedLine[0].equals("n"))	{					
 					this.resultGraph.nodeAmount = Integer.parseInt(splittedLine[1]);
 					this.resultGraph.arcAmount = Integer.parseInt(splittedLine[3]);
-					System.out.println("#Nodes: " + this.resultGraph.nodeAmount + "\n#Arcs: " +this.resultGraph.arcAmount);
 				}
 				
 			});
@@ -67,43 +66,33 @@ public class GraphReader {
 	 */
 	private void ApplyLineToList(String[] line)
 	{	
-		System.out.println("######################");
 		if(line.length<3) {
 			System.out.println("Falsches Format!");
 		}
 		
 		int startNodeId = Integer.parseInt(line[1]);
 		int targetNodeId = Integer.parseInt(line[2]);
-		
-		System.out.println("StartNodeId: "+startNodeId+"\tTargetNodeId: "+targetNodeId);
-		
+				
 		Node startNode;
 		Node targetNode;
 		
 		//Check, ob die Knoten bereits im Graph existieren
 		if ((startNode = this.resultGraph.getNodeWithID(startNodeId)) == null) {
-			System.out.println("Erzeuge neuen (Start-)Knoten..");
+			// Erzeuge neuen Start-Knoten und füge ihn zum Graphen hinzu
 			startNode = new Node(startNodeId);
 			this.resultGraph.add(startNode);
 		} 
 		if ((targetNode = this.resultGraph.getNodeWithID(targetNodeId)) == null) {
-			System.out.println("Erzeuge neuen (Target-)Knoten..");
+			// Erzeuge neuen Target-Knoten und füge ihn zum Graphen hinzu
 			targetNode = new Node(targetNodeId);
 			this.resultGraph.add(targetNode);
 			System.out.println();
 		}
-		
+		//Erstelle neue gerichtete Kante und weise diese den Knoten zu
 		Arc newArc = new Arc(startNode, targetNode); 
-		System.out.println("Kante e("+startNode.Id+","+targetNode.Id+") hinzugefügt.");
 		
 		startNode.addOutgoingArc(newArc);
 		targetNode.addIncomingArc(newArc);
-		
-		System.out.println("Startknoten: " + startNode);
-		System.out.println("TargetKnoten: " + targetNode);
-		System.out.println("Kante: " + newArc);
-		
-		return ;
 	}
 	
 	public DiGraph getDiGraph() {

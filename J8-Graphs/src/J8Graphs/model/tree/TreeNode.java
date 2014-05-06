@@ -4,7 +4,7 @@ import J8Graphs.model.Arc;
 import J8Graphs.model.Node;
 
 /**
- * Klasse für Knoten in Arboreszenzen.
+ * Klasse für Knoten in Arboreszenzen (derzeit nicht verwendet).
  * @author normo
  *
  */

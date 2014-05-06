@@ -37,7 +37,15 @@ public class Node {
 	 */
 	public boolean finished;
 	
-
+	/**
+	 * Zeitstempel, der angibt, wann der Knoten das erste mal besucht wurde.
+	 */
+	public int discoverTime;
+	
+	/**
+	 * Zeitstempel, der angibt, wann der Knoten vom DFS-Stack heruntergenommen wurde.
+	 */
+	public int finishTime;
 	
 	/**
 	 * Konstruktor.
@@ -108,17 +116,36 @@ public class Node {
 	}
 	
 	/**
+	 * Setzt den Discover-Zeistempel auf die angegebene Zeit.
+	 * @param time Zeitstempel
+	 */
+	public void discovered(int time) {
+		this.discoverTime = time;
+	}
+	
+	/**
+	 * Setzt den finished-Zeitstempel auf die angegebene Zeit.
+	 * @param time Zeitstempel
+	 */
+	public void finish(int time) {
+		this.finishTime = time;
+	}
+	
+	/**
 	 * Setzt alle Knotenmarkierungen auf false.
 	 */
 	public void resetLabels() {
 		this.finished = false;
 		this.visited = false;
+		this.discoverTime = -1;
+		this.finishTime = -1;
 	}
 	
 	/**
 	 * ToString-Methode. Gibt das Knoten-Objekt als Zeichenkette zurück.
 	 */
 	public String toString() {
-		return "Node " + this.Id + " [Degree: " + this.getDegree() + ", visited: " + this.visited + ", finished: " + this.finished + "]";
+		//return "Node " + this.Id + " [Degree: " + this.getDegree() + ", visited: " + this.visited + ", finished: " + this.finished + "]";
+		return "" + this.Id;
 	}
 }
