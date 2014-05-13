@@ -6,7 +6,7 @@ package J8Graphs.model;
  * @author normo
  *
  */
-public class Arc {
+public class Edge {
 
 	/**
 	 * Kanten-Id, setzt sich zusammen aus den konkatenierten Knoten-Id's der
@@ -31,7 +31,7 @@ public class Arc {
 	 * @param start Startknoten
 	 * @param target Zielknoten
 	 */
-	public Arc(Node start, Node target){
+	public Edge(Node start, Node target){
 		this.startNode = start;
 		this.targetNode = target;
 		//this.Id = Integer.parseInt(this.startNode.Id + "" + this.targetNode.Id);

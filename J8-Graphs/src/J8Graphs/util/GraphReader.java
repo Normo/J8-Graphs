@@ -44,7 +44,7 @@ public class GraphReader {
 					ApplyLineToList(splittedLine);
 				} else if (splittedLine[0].equals("n"))	{					
 					this.resultGraph.nodeAmount = Integer.parseInt(splittedLine[1]);
-					this.resultGraph.arcAmount = Integer.parseInt(splittedLine[3]);
+					this.resultGraph.edgeAmount = Integer.parseInt(splittedLine[3]);
 				}
 				
 			});
@@ -89,10 +89,10 @@ public class GraphReader {
 			System.out.println();
 		}
 		//Erstelle neue gerichtete Kante und weise diese den Knoten zu
-		Arc newArc = new Arc(startNode, targetNode); 
+		Edge newEdge = new Edge(startNode, targetNode); 
 		
-		startNode.addOutgoingArc(newArc);
-		targetNode.addIncomingArc(newArc);
+		startNode.addOutgoingEdge(newEdge);
+		targetNode.addIncomingEdge(newEdge);
 	}
 	
 	public DiGraph getDiGraph() {

@@ -27,7 +27,7 @@ public class DiGraph extends LinkedList<Node> {
 	/**
 	 * Anzahl der Kanten im DiGraph.
 	 */
-	public int arcAmount;
+	public int edgeAmount;
 	
 	/**
 	 * Label, das angibt, ob der DiGraph einen Kreis enthält.
@@ -52,11 +52,11 @@ public class DiGraph extends LinkedList<Node> {
 	/**
 	 * Standard-Konstruktor. Erzeugt einen leeren Graphen und setzt initial die Anzahl für Knoten und Kanten.
 	 * @param nodes Anzahl der Knoten
-	 * @param arcs Anzahl der gerichteten Kanten
+	 * @param edges Anzahl der gerichteten Kanten
 	 */
-	public DiGraph(int nodes, int arcs) {
+	public DiGraph(int nodes, int edges) {
 		this.nodeAmount = nodes;
-		this.arcAmount = arcs;
+		this.edgeAmount = edges;
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class DiGraph extends LinkedList<Node> {
 	 * UNIMPLEMENTIERT
 	 * @param node Knoten, über dessen eingehende Kanten iteriert werden soll.
 	 */
-	public void iterateOverInArcs(Node node) {
+	public void iterateOverInEdges(Node node) {
 		
 	}
 
@@ -146,16 +146,16 @@ public class DiGraph extends LinkedList<Node> {
 			noUnvisitedNode = true;			// gehe standardmäßig davon aus, dass alle Nachfolgerknoten besucht wurden
 			
 			// Iteration über die ausgehenden Kanten des aktuell betrachteten Knoten
-			for (Arc outgoingArc : currentNode.outArcs) {
+			for (Edge outgoingEdges : currentNode.outEdges) {
 				
 				// ist der Nachfolgeknoten noch unbesucht, füge ihn zum Stack + DFS-Baum hinzu und markiere ihn als besucht
-				if (!outgoingArc.targetNode.isVisited()){
-					outgoingArc.targetNode.visited(true);
+				if (!outgoingEdges.targetNode.isVisited()){
+					outgoingEdges.targetNode.visited(true);
 					time++;
-					outgoingArc.targetNode.discovered(time);
-					stack.push(outgoingArc.targetNode);
-					dfsTree.insertNode(outgoingArc.targetNode);
-					dfsTree.addArc(outgoingArc);
+					outgoingEdges.targetNode.discovered(time);
+					stack.push(outgoingEdges.targetNode);
+					dfsTree.insertNode(outgoingEdges.targetNode);
+					dfsTree.addEdge(outgoingEdges);
 					noUnvisitedNode = false;
 					break;
 				}
@@ -196,16 +196,16 @@ public class DiGraph extends LinkedList<Node> {
 			noUnvisitedNode = true;			// gehe standardmäßig davon aus, dass alle Nachfolgerknoten besucht wurden
 			
 			// Iteration über die ausgehenden Kanten des aktuell betrachteten Knoten
-			for (Arc outgoingArc : currentNode.outArcs) {
+			for (Edge outgoingEdge : currentNode.outEdges) {
 				
 				// ist der Nachfolgeknoten noch unbesucht, füge ihn zum Stack + DFS-Baum hinzu und markiere ihn als besucht
-				if (!outgoingArc.targetNode.isVisited()){
-					outgoingArc.targetNode.visited(true);
+				if (!outgoingEdge.targetNode.isVisited()){
+					outgoingEdge.targetNode.visited(true);
 					t++;
-					outgoingArc.targetNode.discovered(t);
-					stack.push(outgoingArc.targetNode);
-					dfsTree.insertNode(outgoingArc.targetNode);
-					dfsTree.addArc(outgoingArc);
+					outgoingEdge.targetNode.discovered(t);
+					stack.push(outgoingEdge.targetNode);
+					dfsTree.insertNode(outgoingEdge.targetNode);
+					dfsTree.addEdge(outgoingEdge);
 					noUnvisitedNode = false;
 					break;
 				}
@@ -276,12 +276,12 @@ public class DiGraph extends LinkedList<Node> {
 			currentNode = queue.element();
 			noUnvisitedNodes = false;
 			
-			for (Arc outgoingArc : currentNode.outArcs) {
-				if (!outgoingArc.targetNode.visited) {
-					outgoingArc.targetNode.visited(true);
-					queue.add(outgoingArc.targetNode);
-					bfsTree.insertFirstNode(outgoingArc.targetNode);
-					bfsTree.addArc(outgoingArc);
+			for (Edge outgoingEdge : currentNode.outEdges) {
+				if (!outgoingEdge.targetNode.isVisited) {
+					outgoingEdge.targetNode.visited(true);
+					queue.add(outgoingEdge.targetNode);
+					bfsTree.insertFirstNode(outgoingEdge.targetNode);
+					bfsTree.addEdge(outgoingEdge);
 					noUnvisitedNodes = true;
 //					break;
 				}
@@ -355,7 +355,7 @@ public class DiGraph extends LinkedList<Node> {
 			return true;
 		} else {
 			for (Node node : this) {
-				if(node.visited == false) {
+				if(node.isVisited == false) {
 					this.cycleDFS(node);
 					if (this.cycleFound) {
 						System.out.println("Pfadlänge: " + this.cyclePath.size() +"\n");
@@ -376,10 +376,10 @@ public class DiGraph extends LinkedList<Node> {
 		if (this.cycleFound) {
 			return;
 		} else {
-			if (node.finished) {
+			if (node.isFinished) {
 				return;
 			}
-			if (node.visited) {
+			if (node.isVisited) {
 //				System.out.println("Zyklus gefunden bei Knoten " + node.Id  );
 				this.cycleFound = true;
 //				System.out.println("###############!!!!!!!!!!!!!!!!!!!!!!####################################");
@@ -390,8 +390,8 @@ public class DiGraph extends LinkedList<Node> {
 			}
 			node.visited(true);
 			this.cyclePath.add(node);
-			for (Arc arc : node.outArcs) {
-				this.cycleDFS(arc.targetNode);
+			for (Edge edge : node.outEdges) {
+				this.cycleDFS(edge.targetNode);
 			}
 			node.finished(true);
 			if (!this.cycleFound) {
@@ -425,12 +425,12 @@ public class DiGraph extends LinkedList<Node> {
 	 * toString-Methode
 	 */
 	public String toString() {
-		StringBuilder sb = new StringBuilder("n " + this.size() + " m " + this.arcAmount);
+		StringBuilder sb = new StringBuilder("n " + this.size() + " m " + this.edgeAmount);
 		
 		this.forEach((Node node) -> {
-			if(node.outArcs.size() > 0) {
-				for (Arc arc : node.outArcs)
-				sb.append("\n" + arc );
+			if(node.outEdges.size() > 0) {
+				for (Edge edge : node.outEdges)
+				sb.append("\n" + edge );
 			}
 		});
 		

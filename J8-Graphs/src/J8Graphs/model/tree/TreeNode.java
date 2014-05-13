@@ -1,6 +1,6 @@
 package J8Graphs.model.tree;
 
-import J8Graphs.model.Arc;
+import J8Graphs.model.Edge;
 import J8Graphs.model.Node;
 
 /**
@@ -13,7 +13,7 @@ public class TreeNode extends Node {
 	/**
 	 * Die einzige eingehende Kante des TreeNode
 	 */
-	public Arc enteringArc;
+	public Edge enteringEdge;
 	
 	/**
 	 * Vorgänger des TreeNode in der Arboreszenz

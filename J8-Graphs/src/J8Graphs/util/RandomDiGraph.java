@@ -1,7 +1,7 @@
 package J8Graphs.util;
 
 import java.util.Random;
-import J8Graphs.model.Arc;
+import J8Graphs.model.Edge;
 import J8Graphs.model.DiGraph;
 import J8Graphs.model.Node;
 
@@ -42,7 +42,7 @@ public class RandomDiGraph {
 		DiGraph randomGraph = new DiGraph(this.nodeAmount, edgeAmount);
 
 		Node newNode,targetNode;
-		Arc newArc;
+		Edge newEdge;
 		int randomNodeId;
 
 		for (int i = 0; i < this.nodeAmount; i++) {
@@ -58,21 +58,21 @@ public class RandomDiGraph {
 				randomGraph.add(targetNode);
 			};
 
-			newArc = new Arc(newNode, targetNode);
-			newNode.addOutgoingArc(newArc);
-			targetNode.addIncomingArc(newArc);
+			newEdge = new Edge(newNode, targetNode);
+			newNode.addOutgoingEdge(newEdge);
+			targetNode.addIncomingEdge(newEdge);
 
 		}
 
-		int remainingArcs = this.edgeAmount - this.nodeAmount;
+		int remainingEdges = this.edgeAmount - this.nodeAmount;
 
-		for (int i = 0; i < remainingArcs; i++) {
+		for (int i = 0; i < remainingEdges; i++) {
 
 			newNode = randomGraph.getNodeWithID(this.getRandomNodeId());
 			targetNode = randomGraph.getNodeWithID(this.getRandomNodeId());
-			newArc = new Arc(newNode, targetNode);
-			newNode.addOutgoingArc(newArc);
-			targetNode.addIncomingArc(newArc);
+			newEdge = new Edge(newNode, targetNode);
+			newNode.addOutgoingEdge(newEdge);
+			targetNode.addIncomingEdge(newEdge);
 		}
 
 		return randomGraph;
@@ -87,7 +87,7 @@ public class RandomDiGraph {
 		DiGraph randomGraph = new DiGraph(this.nodeAmount, edgeAmount);
 
 		Node startNode,targetNode;
-		Arc newArc;
+		Edge newEdge;
 		int randomId1, randomId2;
 		
 		for (int i = 0; i < this.nodeAmount-1; i++) {
@@ -103,17 +103,17 @@ public class RandomDiGraph {
 				randomGraph.add(targetNode);
 			};
 
-			newArc = new Arc(startNode, targetNode);
-			startNode.addOutgoingArc(newArc);
-			targetNode.addIncomingArc(newArc);
+			newEdge = new Edge(startNode, targetNode);
+			startNode.addOutgoingEdge(newEdge);
+			targetNode.addIncomingEdge(newEdge);
 
 		}
 		
-		int remainingArcs = this.edgeAmount - (this.nodeAmount-1);
+		int remainingEdges = this.edgeAmount - (this.nodeAmount-1);
 		startNode = null;
 		targetNode = null;
 		
-		for (int i = 0; i < remainingArcs; i++) {
+		for (int i = 0; i < remainingEdges; i++) {
 			
 			randomId1 = this.getRandomNodeId();
 			randomId2 = this.getRandomNodeId();
@@ -131,9 +131,9 @@ public class RandomDiGraph {
 				targetNode = randomGraph.getNodeWithID(randomId2);
 			} 
 			
-			newArc = new Arc(startNode, targetNode);
-			startNode.addOutgoingArc(newArc);
-			targetNode.addIncomingArc(newArc);
+			newEdge = new Edge(startNode, targetNode);
+			startNode.addOutgoingEdge(newEdge);
+			targetNode.addIncomingEdge(newEdge);
 		}
 
 		return randomGraph;

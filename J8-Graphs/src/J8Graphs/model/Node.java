@@ -16,26 +16,36 @@ public class Node {
 	public int Id;
 	
 	/**
+	 * X-Koordinate des Knotens
+	 */
+	public int x;
+	
+	/**
+	 * Y-Koordinate des Knotens
+	 */
+	public int y;
+	
+	/**
 	 * Verkettete Liste der ausgehenden Kanten.
 	 */
-	public LinkedList<Arc> outArcs;
+	public LinkedList<Edge> outEdges;
 	
 	/**
 	 * Verkettet Liste der eingehenden Kanten.
 	 */
-	public LinkedList<Arc> inArcs;
+	public LinkedList<Edge> inEdges;
 	
 	/**
 	 * Label, das angibt, ob der Knoten im Rahmen eines Scan-Algorithmus
 	 * bereits besucht bzw. betrachtet wurde. 
 	 */
-	public boolean visited;
+	public boolean isVisited;
 	
 	/**
 	 * Label, das angibt, ob der Knoten im Rahmen eines Scan-Algorithmus
 	 * bereits abgearbeitet wurde. 
 	 */
-	public boolean finished;
+	public boolean isFinished;
 	
 	/**
 	 * Zeitstempel, der angibt, wann der Knoten das erste mal besucht wurde.
@@ -53,10 +63,10 @@ public class Node {
 	 */
 	public Node(int id){
 		this.Id = id;
-		this.outArcs = new LinkedList<Arc>();
-		this.inArcs = new LinkedList<Arc>();
-		this.visited = false;
-		this.finished = false;
+		this.outEdges = new LinkedList<Edge>();
+		this.inEdges = new LinkedList<Edge>();
+		this.isVisited = false;
+		this.isFinished = false;
 	}
 	
 	/**
@@ -66,29 +76,29 @@ public class Node {
 	 */
 	public int getDegree(){
 		int result = 0;
-		if (outArcs != null){
-			result = outArcs.size(); 
+		if (outEdges != null){
+			result = outEdges.size(); 
 		}
-		if (inArcs != null){
-			result += inArcs.size(); 
+		if (inEdges != null){
+			result += inEdges.size(); 
 		}
 		return result;
 	};
 	
 	/**
 	 * Fügt dem Knoten eine neue eingehende Kante hinzu.
-	 * @param inArc Referenz auf die neue eingehende Kante
+	 * @param inEdge Referenz auf die neue eingehende Kante
 	 */
-	public void addIncomingArc(Arc inArc) {
-		this.inArcs.add(inArc);
+	public void addIncomingEdge(Edge inEdge) {
+		this.inEdges.add(inEdge);
 	}
 	
 	/**
 	 * Fügt dem Knoten eine neue ausgehende Kante hinzu.
-	 * @param outArc Referenz auf die neue ausgehende Kante
+	 * @param outEdge Referenz auf die neue ausgehende Kante
 	 */
-	public void addOutgoingArc(Arc outArc) {
-		this.outArcs.add(outArc);
+	public void addOutgoingEdge(Edge outEdge) {
+		this.outEdges.add(outEdge);
 	}
 	
 	/**
@@ -96,7 +106,7 @@ public class Node {
 	 * @return TRUE, falls der Knoten schon besucht wurde
 	 */
 	public boolean isVisited() {
-		return this.visited;
+		return this.isVisited;
 	}
 	
 	/**
@@ -104,7 +114,7 @@ public class Node {
 	 * @param state Boolsche Variable, die angibt, ob der Knoten besucht wurde.
 	 */
 	public void visited(boolean state) {
-		this.visited = state;
+		this.isVisited = state;
 	}
 	
 	/**
@@ -112,7 +122,7 @@ public class Node {
 	 * @param state Bool'sche Variable, die angibt, obe der Knoten abgearbeitet wurde.
 	 */
 	public void finished(boolean state) {
-		this.finished = state;
+		this.isFinished = state;
 	}
 	
 	/**
@@ -135,8 +145,8 @@ public class Node {
 	 * Setzt alle Knotenmarkierungen auf false.
 	 */
 	public void resetLabels() {
-		this.finished = false;
-		this.visited = false;
+		this.isFinished = false;
+		this.isVisited = false;
 		this.discoverTime = -1;
 		this.finishTime = -1;
 	}

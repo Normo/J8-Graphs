@@ -2,7 +2,7 @@ package J8Graphs.model.tree;
 
 import java.util.LinkedList;
 
-import J8Graphs.model.Arc;
+import J8Graphs.model.Edge;
 import J8Graphs.model.DiGraph;
 import J8Graphs.model.Node;
 
@@ -26,14 +26,14 @@ public class Tree extends DiGraph {
 	/**
 	 * Verkettete Liste mit den Kanten des Baumes.
 	 */
-	public LinkedList<Arc> arcs;
+	public LinkedList<Edge> edges;
 	
 	/**
 	 * Standard-Konstruktor
 	 */
 	public Tree() {
 		super();
-		arcs = new LinkedList<>();
+		edges = new LinkedList<>();
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public class Tree extends DiGraph {
 		super();
 		this.root = rootNode;
 		this.insertFirstNode(this.root);
-		arcs = new LinkedList<>();
+		edges = new LinkedList<>();
 	}
 
 	/**
@@ -81,16 +81,16 @@ public class Tree extends DiGraph {
 	 * @param e Neue Kante
 	 * @return siehe java.util.Collection.add
 	 */
-	public boolean addArc(Arc e) {
-		return this.arcs.add(e);
+	public boolean addEdge(Edge e) {
+		return this.edges.add(e);
 	}
 	
 	/**
 	 * Gibt die Gesamtanzahl der Kanten des Baumes zurück.
 	 * @return Anzahl der Elemente der Kanten-Liste
 	 */
-	public int getArcAmount() {
-		return this.arcs.size();
+	public int getEdgeAmount() {
+		return this.edges.size();
 	}
 	
 	/**
@@ -99,9 +99,9 @@ public class Tree extends DiGraph {
 	 */
 	public String toString() {
 		
-		StringBuilder sb = new StringBuilder("n " + this.size() + " m " + this.arcs.size());
+		StringBuilder sb = new StringBuilder("n " + this.size() + " m " + this.edges.size());
 		
-		for (Arc e : this.arcs) {
+		for (Edge e : this.edges) {
 			sb.append("\n" + e.toString());
 		}
 		
