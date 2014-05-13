@@ -25,6 +25,12 @@ public class Edge {
 	 * Zielknoten in dem die Kante endet.
 	 */
 	public Node targetNode;
+	
+	/**
+	 * Länge der Kante. Wird aus dem Manhattan-Abstand der beiden Endknoten 
+	 * berechnet.
+	 */
+	public int length;
 
 	/**
 	 * Konstruktor.
@@ -34,7 +40,15 @@ public class Edge {
 	public Edge(Node start, Node target){
 		this.startNode = start;
 		this.targetNode = target;
+		
+		//@Deprecated
 		//this.Id = Integer.parseInt(this.startNode.Id + "" + this.targetNode.Id);
+		
+		//Berechne Manhattan-Distanz
+		if (this.startNode.hasCoordinates && this.targetNode.hasCoordinates) {
+			length = Math.abs(this.startNode.xCoord - this.targetNode.xCoord)
+					+ Math.abs(this.startNode.yCoord - this.targetNode.yCoord);
+		}
 	}
 	
 	/**

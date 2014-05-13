@@ -18,12 +18,17 @@ public class Node {
 	/**
 	 * X-Koordinate des Knotens
 	 */
-	public int x;
+	public int xCoord;
 	
 	/**
 	 * Y-Koordinate des Knotens
 	 */
-	public int y;
+	public int yCoord;
+	
+	/**
+	 * Flag, das angibt, ob die Koordinaten gesetzt wurden.
+	 */
+	public boolean hasCoordinates;
 	
 	/**
 	 * Verkettete Liste der ausgehenden Kanten.
@@ -63,6 +68,24 @@ public class Node {
 	 */
 	public Node(int id){
 		this.Id = id;
+		this.hasCoordinates = false;
+		this.outEdges = new LinkedList<Edge>();
+		this.inEdges = new LinkedList<Edge>();
+		this.isVisited = false;
+		this.isFinished = false;
+	}
+	
+	/**
+	 * Konstruktor
+	 * @param id Id des Knotens
+	 * @param x X-koordinate
+	 * @param y Y-koordinate
+	 */
+	public Node(int id, int x, int y){
+		this.Id = id;
+		this.xCoord = x;
+		this.yCoord = y;
+		this.hasCoordinates = true;
 		this.outEdges = new LinkedList<Edge>();
 		this.inEdges = new LinkedList<Edge>();
 		this.isVisited = false;

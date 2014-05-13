@@ -41,7 +41,9 @@ public class GraphReader {
 				String[] splittedLine = line.split("\\s");
 				
 				if (splittedLine[0].equals("e")) {
-					ApplyLineToList(splittedLine);
+					createNewEdge(splittedLine);
+				} else if (splittedLine[0].equals("v")) {
+					createNewNode(splittedLine);
 				} else if (splittedLine[0].equals("n"))	{					
 					this.resultGraph.nodeAmount = Integer.parseInt(splittedLine[1]);
 					this.resultGraph.edgeAmount = Integer.parseInt(splittedLine[3]);
@@ -64,10 +66,10 @@ public class GraphReader {
 	 * und dem DiGraph hinzugefügt.
 	 * @param line String-Array, dass die Whitespace-gesplittete Zeile enthält
 	 */
-	private void ApplyLineToList(String[] line)
-	{	
+	private void createNewEdge(String[] line) {
 		if(line.length<3) {
-			System.out.println("Falsches Format!");
+			System.out.println("Zeile enthält falsches Format!");
+			return;
 		}
 		
 		int startNodeId = Integer.parseInt(line[1]);
@@ -93,6 +95,24 @@ public class GraphReader {
 		
 		startNode.addOutgoingEdge(newEdge);
 		targetNode.addIncomingEdge(newEdge);
+	}
+	
+	/**
+	 * Wertet eine Zeile, beginnend mit 'v', aus und erstellt einen neuen Knoten.
+	 * @param line String-Array, dass die Whitespace-gesplittete Zeile enthält
+	 */
+	private void createNewNode(String[] line) {
+		if (line.length < 4) {
+			System.out.println("Zeile enthält falsches Format!");
+			return;
+		}
+		
+		int newNodeId = Integer.parseInt(line[1]);
+		int xCoord = Integer.parseInt(line[2]);
+		int yCoord = Integer.parseInt(line[3]);
+		
+		Node newNode = new Node(newNodeId, xCoord, yCoord);
+		this.resultGraph.add(newNode);
 	}
 	
 	public DiGraph getDiGraph() {
