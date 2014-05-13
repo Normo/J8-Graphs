@@ -82,7 +82,7 @@ public class RandomDiGraph {
 	 * Erzeugt einen gerichteten, kreisfreien Graphen.
 	 * @return zufällig erzeugter, kreisfreier DiGraph
 	 */
-	public DiGraph getRandomAcyclicDiGraph() {
+	public DiGraph getAcyclicRandomDiGraph() {
 
 		DiGraph randomGraph = new DiGraph(this.nodeAmount, edgeAmount);
 

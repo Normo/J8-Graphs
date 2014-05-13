@@ -3,7 +3,7 @@ package Examples.RandomGraphCreator;
 import J8Graphs.util.GraphWriter;
 import J8Graphs.util.RandomDiGraph;
 
-public class Launcher {
+public class RandomGraphCreator {
 
 	public static void main(String[] args) {
 		
@@ -26,7 +26,7 @@ public class Launcher {
 			
 			if (args.length > 3 && args[3].equals("azyklisch")) {
 				System.out.println("Erzeuge zufälligen azyklischen gerichteten Graphen mit " + nodeAmount + " Knoten und " + edgeAmount + " Kanten.");
-				gw.writeGraph(randomGraph.getRandomAcyclicDiGraph());
+				gw.writeGraph(randomGraph.getAcyclicRandomDiGraph());
 			} else {
 				System.out.println("Erzeuge zufälligen gerichteten Graphen mit " + nodeAmount + " Knoten und " + edgeAmount + " Kanten.");
 				gw.writeGraph(randomGraph.getRandomDiGraph());

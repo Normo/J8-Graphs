@@ -5,7 +5,7 @@ import J8Graphs.model.Node;
 import J8Graphs.util.GraphReader;
 import J8Graphs.util.GraphWriter;
 
-public class Launcher {
+public class TopoSort {
 
 	public static void main(String[] args) {
 		if (args.length < 2) {

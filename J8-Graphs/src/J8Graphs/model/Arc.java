@@ -10,8 +10,10 @@ public class Arc {
 
 	/**
 	 * Kanten-Id, setzt sich zusammen aus den konkatenierten Knoten-Id's der
-	 * beiden inzidenten Knoten.
+	 * beiden inzidenten Knoten. Wird nicht mehr verwendet, da mehr als 4 Byte
+	 * für die Id benötigt werden.
 	 */
+	@Deprecated
 	public int Id;
 	
 	/**
@@ -32,7 +34,7 @@ public class Arc {
 	public Arc(Node start, Node target){
 		this.startNode = start;
 		this.targetNode = target;
-		this.Id = Integer.parseInt(this.startNode.Id + "" + this.targetNode.Id);
+		//this.Id = Integer.parseInt(this.startNode.Id + "" + this.targetNode.Id);
 	}
 	
 	/**
