@@ -55,6 +55,6 @@ public class Edge {
 	 * Überschriebene toString-Methode.
 	 */
 	public String toString() {
-		return "e " + this.startNode.Id + " " + this.targetNode.Id;
+		return "e " + this.startNode.Id + " " + this.targetNode.Id + " Länge: " + this.length;
 	}
 }

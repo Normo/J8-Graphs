@@ -9,15 +9,17 @@ public class TestMain {
 	static final String graphWithCycles = "data/DummyGraph2.dat";
 	static final String graphTopologicalOrder = "data/DummyGraph3.dat";
 	static final String graphWithUniqueCycle = "data/DummyGraph4.dat";
+	static final String bigTestGraph1 = "data/n100000_m400000.txt";
 
 	
 	public static void main(String[] args) {
 		
 		System.out.println("Start Test..");
 		
-		GraphReader gr = new GraphReader("data/randomgraph.out");
+		GraphReader gr = new GraphReader(graphWithoutCycles);
 		DiGraph d = gr.getDiGraph();
-		System.out.println(d.topologicalSorting());
+		System.out.println(d);
+//		System.out.println(d.topologicalSorting());
 //		ArrayList<Tree> forest = d.depthFirstSearch(d.getNodeWithID(1));		
 //		
 //		forest.forEach(System.out::println);

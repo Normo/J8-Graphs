@@ -45,10 +45,17 @@ public class GraphReader {
 				} else if (splittedLine[0].equals("v")) {
 					createNewNode(splittedLine);
 				} else if (splittedLine[0].equals("n"))	{					
-					this.resultGraph.nodeAmount = Integer.parseInt(splittedLine[1]);
-					this.resultGraph.edgeAmount = Integer.parseInt(splittedLine[3]);
-				}
-				
+					try {
+						this.resultGraph.nodeAmount = Integer.parseInt(splittedLine[1]);
+						this.resultGraph.edgeAmount = Integer.parseInt(splittedLine[3]);
+					} catch (NumberFormatException e) {
+						System.out.printf("[Fehler]: %s\n", e);
+						System.out.println("\tFür Knoten- oder Kantenanzahl wurde ein ungültiger Wert angegeben!");
+						System.out.println("\tErlaubte Werte liegen zwischen 0 und " + Integer.MAX_VALUE + ".\n");
+						System.out.println("Beende Programm!");
+						System.exit(1);
+					}
+				}				
 			});
 			
 			srcStream.close();
@@ -72,8 +79,18 @@ public class GraphReader {
 			return;
 		}
 		
-		int startNodeId = Integer.parseInt(line[1]);
-		int targetNodeId = Integer.parseInt(line[2]);
+		int startNodeId = -1;
+		int targetNodeId = -1;
+		try {
+			startNodeId = Integer.parseInt(line[1]);
+			targetNodeId = Integer.parseInt(line[2]);
+		} catch (NumberFormatException e) {
+			System.out.printf("[Fehler]: %s\n", e);
+			System.out.println("\tFür eine Knoten-ID wurde ein ungültiger Wert angegeben!");
+			System.out.println("\tErlaubte Werte liegen zwischen 0 und " + Integer.MAX_VALUE + ".\n");
+			System.out.println("Beende Programm!");
+			System.exit(1);
+		}
 				
 		Node startNode;
 		Node targetNode;
@@ -107,12 +124,21 @@ public class GraphReader {
 			return;
 		}
 		
-		int newNodeId = Integer.parseInt(line[1]);
-		int xCoord = Integer.parseInt(line[2]);
-		int yCoord = Integer.parseInt(line[3]);
-		
-		Node newNode = new Node(newNodeId, xCoord, yCoord);
-		this.resultGraph.add(newNode);
+		try {
+			int newNodeId = Integer.parseInt(line[1]);
+			int xCoord = Integer.parseInt(line[2]);
+			int yCoord = Integer.parseInt(line[3]);
+			
+			Node newNode = new Node(newNodeId, xCoord, yCoord);
+			this.resultGraph.add(newNode);
+			
+		} catch (NumberFormatException e) {
+			System.out.printf("[Fehler]: %s\n", e);
+			System.out.println("\tFür eine Knoten-ID oder Koordinate wurde ein ungültiger Wert angegeben!");
+			System.out.println("\tErlaubte Werte liegen zwischen 0 und " + Integer.MAX_VALUE + ".\n");
+			System.out.println("Beende Programm!");
+			System.exit(1);
+		}
 	}
 	
 	public DiGraph getDiGraph() {
