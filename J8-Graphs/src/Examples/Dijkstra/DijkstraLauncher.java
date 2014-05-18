@@ -5,7 +5,7 @@ package Examples.Dijkstra;
  * @author normo
  *
  */
-public class Dijkstra {
+public class DijkstraLauncher {
 
 	public static void main(String[] args) {
 		
