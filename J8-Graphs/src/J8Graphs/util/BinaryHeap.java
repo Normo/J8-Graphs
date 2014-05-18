@@ -123,6 +123,16 @@ public class BinaryHeap {
 	}
 
 	/**
+	 * Verringert den Schlüsselwert eines Elements und stellt die Heap-Bedingung
+	 * wieder her, indem von unten nach oben getauscht wird (bottom-up).
+	 * @param i Index des Elements
+	 * @param newKey neuer Schlüsselwert
+	 */
+	public void decreaseKey(Node node, int newKey) {
+		this.decreaseKey(Arrays.asList(this.heap).indexOf(node), newKey);
+	}
+	
+	/**
 	 * Fügt das Element an das Ende des Heaps und ruft decreaseKey auf, um die
 	 * Heap-Eigenschaft wiederherzustellen.
 	 * @param node Neues Element, das hinzugefügt werden soll
@@ -297,7 +307,7 @@ public class BinaryHeap {
 
 	/**
 	 * Prüft, ob der Heap leer ist.
-	 * @return TRUE, falls der Heap keine ELemente mehr gespeichert hat, FALSE sonst
+	 * @return TRUE, falls der Heap keine Elemente mehr gespeichert hat, FALSE sonst
 	 */
 	public boolean isEmpty() {
 		return size == 0;
