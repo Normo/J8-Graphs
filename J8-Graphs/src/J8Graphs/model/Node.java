@@ -8,7 +8,7 @@ import java.util.LinkedList;
  * @author normo
  *
  */
-public class Node {
+public class Node implements Comparable<Node>{
 
 	/**
 	 * Knotennummer
@@ -61,6 +61,12 @@ public class Node {
 	 * Zeitstempel, der angibt, wann der Knoten vom DFS-Stack heruntergenommen wurde.
 	 */
 	public int finishTime;
+	
+	/**
+	 * Länge des kürzesten Pfades zu einem anderen Knoten.  Dient als Key für
+	 * den binären Heap beim Dijkstra-Algorithmus
+	 */
+	public int distance;
 	
 	/**
 	 * Konstruktor.
@@ -180,5 +186,16 @@ public class Node {
 	public String toString() {
 		//return "Node " + this.Id + " [Degree: " + this.getDegree() + ", visited: " + this.visited + ", finished: " + this.finished + "]";
 		return "" + this.Id;
+	}
+
+	@Override
+	public int compareTo(Node o) {
+		if (this.distance < o.distance) {
+			return -1;
+		} else if (this.distance > o.distance) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 }
