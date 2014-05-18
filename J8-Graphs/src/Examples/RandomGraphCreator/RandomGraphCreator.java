@@ -49,6 +49,12 @@ public class RandomGraphCreator {
 			
 			System.out.println("Ergebnis in Outputdatei: " + path);
 			
+			g.forEach(node -> {
+				node.outEdges.forEach(edge -> {
+					System.out.println(edge + " Länge: " +edge.length );
+				});
+			});
+			
 		}
 		
 		
