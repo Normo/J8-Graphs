@@ -69,6 +69,11 @@ public class Node {
 	public int distance;
 	
 	/**
+	 * Distanzlabel für die Rückwärtssuche beim bidirektionalen Dijkstra.
+	 */
+	public int distanceBackward;
+	
+	/**
 	 * Vorgängerknoten.
 	 */
 	public Node pred;
@@ -84,6 +89,9 @@ public class Node {
 		this.inEdges = new LinkedList<Edge>();
 		this.isVisited = false;
 		this.isFinished = false;
+		this.distance = Integer.MAX_VALUE;
+		this.pred = null;
+		this.distanceBackward = Integer.MAX_VALUE;
 	}
 	
 	/**
@@ -101,6 +109,9 @@ public class Node {
 		this.inEdges = new LinkedList<Edge>();
 		this.isVisited = false;
 		this.isFinished = false;
+		this.distance = Integer.MAX_VALUE;
+		this.pred = null;
+		this.distanceBackward = Integer.MAX_VALUE;
 	}
 	
 	/**
@@ -176,7 +187,7 @@ public class Node {
 	}
 	
 	/**
-	 * Setzt alle Knotenmarkierungen auf false.
+	 * Setzt alle Knotenmarkierungen auf die default-Werte zurück.
 	 */
 	public void resetLabels() {
 		this.isFinished = false;
@@ -185,6 +196,7 @@ public class Node {
 		this.finishTime = -1;
 		this.distance = Integer.MAX_VALUE;
 		this.pred = null;
+		this.distanceBackward = Integer.MAX_VALUE;
 	}
 	
 	/**

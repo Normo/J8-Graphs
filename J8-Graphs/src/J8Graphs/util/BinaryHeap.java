@@ -25,32 +25,40 @@ public class BinaryHeap {
 	 * Anzahl der Elemente, die im Heap gespeichert sind.
 	 */
 	public int size;
+	
+	public boolean backwardSearch;
 
 	/**
 	 * Standard-Konstruktor.
+	 * @param backwardFlag Angabe, ob der Heap für die Rückwärtssuche des Dijkstra-Algorithmus genutzt wird
 	 */
-	public BinaryHeap() {
+	public BinaryHeap(boolean backwardFlag) {
 		this.heap = new Node[DEFAULT_CAPACITY];
 		this.size = 0;
+		this.backwardSearch = backwardFlag;
 	}
 
 	/**
 	 * Konstruktor mit Angabe der initialen Kapazität.
 	 * @param capacity Anfangsgröße des Heaps
+	 * @param backwardFlag Angabe, ob der Heap für die Rückwärtssuche des Dijkstra-Algorithmus genutzt wird
 	 */
-	public BinaryHeap(int capacity) {
+	public BinaryHeap(int capacity, boolean backwardFlag) {
 		this.heap = new Node[capacity];
 		this.size = 0;
+		this.backwardSearch = backwardFlag;
 	}
 
 	/**
 	 * Konstruktor, der aus einem gegebenen Knoten-Array einen binären Heap
 	 * aufbaut.
 	 * @param array Knoten-Array
+	 * @param backwardFlag Angabe, ob der Heap für die Rückwärtssuche des Dijkstra-Algorithmus genutzt wird
 	 */
-	public BinaryHeap(Node[] array) {
+	public BinaryHeap(Node[] array, boolean backwardFlag) {
 		this.heap = array;
 		this.size = array.length;
+		this.backwardSearch = backwardFlag;
 		this.build();
 	}
 
@@ -113,7 +121,8 @@ public class BinaryHeap {
 	 */
 	public void decreaseKey(int i, int newKey) {
 		if(this.key(i) >= newKey) {
-			this.heap[i].distance = newKey;
+//			this.heap[i].distance = newKey;
+			this.setKey(i, newKey);
 			// tausche solange nach oben, bis Heap-Eigenschaft erfüllt
 			while (i > 0 && this.key(i) < this.key(this.parentIndex(i))) {
 				this.swap(i, this.parentIndex(i));
@@ -144,7 +153,7 @@ public class BinaryHeap {
 		size++;
 		int i = this.size-1;
 		this.heap[i] = node;
-		this.decreaseKey(i, node.distance);
+		this.decreaseKey(i, this.key(i));
 	}
 
 	/**
@@ -166,7 +175,7 @@ public class BinaryHeap {
 			if (i == 0 || this.key(i) > this.key(this.parentIndex(i))) {
 				this.heapify(i);
 			} else {
-				this.decreaseKey(i, this.heap[i].distance);
+				this.decreaseKey(i, this.key(i));
 			}
 		}
 		return removedItem;
@@ -199,7 +208,24 @@ public class BinaryHeap {
 	 * @return Wert des Schlüssels
 	 */
 	private int key(int i) {
-		return this.heap[i].distance;
+		if (this.backwardSearch) {
+			return this.heap[i].distanceBackward;
+		} else {
+			return this.heap[i].distance;
+		}
+	}
+	
+	/**
+	 * Setzt den Schlüsselwert des Elements
+	 * @param i Index des Elements
+	 * @param key Schlüsselwert
+	 */
+	private void setKey(int i, int key) {
+		if (this.backwardSearch) {
+			this.heap[i].distanceBackward = key;
+		} else {
+			this.heap[i].distance = key;
+		}
 	}
 
 	/**

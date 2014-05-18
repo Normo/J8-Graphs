@@ -1,5 +1,7 @@
 package J8GraphsTest;
 
+import java.util.Date;
+
 import J8Graphs.algorithms.Dijkstra;
 import J8Graphs.model.DiGraph;
 import J8Graphs.model.Node;
@@ -14,6 +16,89 @@ public class TestMain {
 	static final String graphTopologicalOrder = "data/DummyGraph3.dat";
 	static final String graphWithUniqueCycle = "data/DummyGraph4.dat";
 	static final String bigTestGraph1 = "data/n100000_m400000.out";
+
+	public static void main(String[] args) {
+
+		System.out.println("Start Test..\n\n");
+
+//		GraphReader gr = new GraphReader(graphWithoutCycles);
+//		DiGraph d = gr.getDiGraph();
+//		System.out.println(d);
+
+		//		testBinaryHeap();
+		long start = new Date().getTime();
+		DiGraph d2 = new GraphReader(true, "data/randomgraph.out").getDiGraph();
+		long runningTime = new Date().getTime() - start;
+		System.out.println("Laufzeit Graph einlesen: " + runningTime + " ms\n\n");
+//		if (!d2.graphScanDFS(d2.getFirst()).contains(d2.getLast())) {
+//			System.out.println("Nicht erreichbar!!");
+//		};
+		
+//		d2.forEach(node -> {
+//			node.outEdges.forEach(edge -> {
+//				System.out.println(edge + " Länge: " +edge.length );
+//			});
+//		});
+		
+		start = new Date().getTime();
+		Dijkstra.standardDijkstra(d2, d2.getFirst(), d2.getLast());
+		runningTime = new Date().getTime() - start;
+		System.out.println("Laufzeit Standard-Dijkstra: " + runningTime + " ms\n\n");
+		start = new Date().getTime();
+		Dijkstra.bidirectionalDijkstra(d2, d2.getFirst(), d2.getLast());
+		runningTime = new Date().getTime() - start;
+		System.out.println("Laufzeit Bidirektional-Dijkstra: " + runningTime + " ms\n\n");
+
+		//		System.out.println(d.topologicalSorting());
+		//		ArrayList<Tree> forest = d.depthFirstSearch(d.getNodeWithID(1));		
+		//		
+		//		forest.forEach(System.out::println);
+		//		
+		//		LinkedList<Node> topSortLinkedList = d.topologicalSorting(d.getNodeWithID(1));
+		//		
+		//		topSortLinkedList.forEach(System.out::println);
+
+		//		RandomDiGraph r = new RandomDiGraph(1000, 2500);
+		//		DiGraph randomGraph = r.getRandomDiGraph();
+		//		
+		////		System.out.println("RandomGraph: \n" + randomGraph);
+		//		
+		//		System.out.println("TopSort: ");
+		//		System.out.println(randomGraph.topologicalSorting(randomGraph.getNodeWithID(0)));
+		//		
+		//		GraphWriter gw = new GraphWriter("data/graph.out");
+		//		gw.writeGraph(randomGraph.graphScanDFS(randomGraph.getNodeWithID(r.getRandomNodeId())));
+		//		
+		//		Tree dfsTree = d.depthFirstSearch(d.getNodeWithID(1));
+		//		
+		//		System.out.println("DFS-Baum:\n" + dfsTree);
+		//		
+		//		Tree bfsTree = d.breadthFirstSearch(d.getNodeWithID(1));
+		//		
+		//		System.out.println("BFS-Baum:");
+		//		System.out.println(bfsTree);
+		//		
+		//		Tree dfsTree2 = d.graphScanDFS(d.getNodeWithID(4));
+		//		
+		//		System.out.println("DFS-Baum:\n" + dfsTree2);
+		//		
+		//		Tree bfsTree2 = d.breadthFirstSearch(d.getNodeWithID(4));
+		//		
+		//		System.out.println("BFS-Baum:");
+		//		System.out.println(bfsTree2);
+		//		
+		//		RandomDiGraph r = new RandomDiGraph(100, 250);
+		//		
+		//		DiGraph randomGraph = r.getRandomDiGraph();
+		//		DiGraph randomGraph = r.getRandomAcyclicDiGraph();
+		//		
+		//		System.out.println("#########################\nRandomGraph:\n" + randomGraph);
+		//		
+		//		System.out.println(randomGraph.graphScanDFS(randomGraph.getNodeWithID(r.getRandomInt(0, 99))));
+
+		System.out.println("Test finished..");
+	}
+
 
 	public static void testBinaryHeap() {
 		//		BinaryNodeHeap bHeap = new BinaryNodeHeap();
@@ -74,7 +159,7 @@ public class TestMain {
 		//			array[i] = node;
 		//		}
 
-		BinaryHeap bHeap = new BinaryHeap(array);
+		BinaryHeap bHeap = new BinaryHeap(array, false);
 		//bHeap.build();
 
 		System.out.println(bHeap);
@@ -92,7 +177,7 @@ public class TestMain {
 		System.out.println("Heap-Size: " + bHeap.size);
 		System.out.println("Heap-Kapazität: " + bHeap.heap.length);
 		System.out.println("Kleinstes Element: Node "+ bHeap.findMin());
-		
+
 		System.out.println("\nEntferne Node 11");
 		bHeap.delete(0);
 		System.out.println(bHeap);
@@ -100,7 +185,7 @@ public class TestMain {
 		System.out.println("Heap-Kapazität: " + bHeap.heap.length);
 		System.out.println("Kleinstes Element: Node "+ bHeap.findMin());
 
-		
+
 		System.out.println("\nEntferne Node 3");
 		bHeap.delete(2);
 		System.out.println(bHeap);
@@ -114,7 +199,7 @@ public class TestMain {
 		System.out.println("Heap-Size: " + bHeap.size);
 		System.out.println("Heap-Kapazität: " + bHeap.heap.length);
 		System.out.println("Kleinstes Element: Node "+ bHeap.findMin());
-		
+
 		while (bHeap.size > 0) {
 			System.out.println("\nEntferne kleinstes Element:");
 			bHeap.deleteMin();
@@ -123,80 +208,6 @@ public class TestMain {
 			System.out.println("Heap-Kapazität: " + bHeap.heap.length);
 			System.out.println("Kleinstes Element: Node "+ bHeap.findMin());
 		}
-		
+
 	}
-	
-	public static void main(String[] args) {
-		
-		System.out.println("Start Test..");
-		
-		GraphReader gr = new GraphReader(graphWithoutCycles);
-		DiGraph d = gr.getDiGraph();
-		System.out.println(d);
-		
-//		testBinaryHeap();
-		
-		Dijkstra dijkstra = new Dijkstra(d);
-		dijkstra.standardDijkstra(d.getFirst(), d.getLast());
-		
-		DiGraph d2 = RandomDiGraph.getUncoordinatedRandomDiGraph(10000, 30000, true);
-		System.out.println(d2);
-		
-		if (d2.cycleExists()) {
-			System.out.println("Zyklus!!");
-			System.out.println(d2.getCyclePath());
-		} else {
-			System.out.println("kein Zyklus!!");
-		}
-		
-//		System.out.println(d.topologicalSorting());
-//		ArrayList<Tree> forest = d.depthFirstSearch(d.getNodeWithID(1));		
-//		
-//		forest.forEach(System.out::println);
-//		
-//		LinkedList<Node> topSortLinkedList = d.topologicalSorting(d.getNodeWithID(1));
-//		
-//		topSortLinkedList.forEach(System.out::println);
-		
-//		RandomDiGraph r = new RandomDiGraph(1000, 2500);
-//		DiGraph randomGraph = r.getRandomDiGraph();
-//		
-////		System.out.println("RandomGraph: \n" + randomGraph);
-//		
-//		System.out.println("TopSort: ");
-//		System.out.println(randomGraph.topologicalSorting(randomGraph.getNodeWithID(0)));
-//		
-//		GraphWriter gw = new GraphWriter("data/graph.out");
-//		gw.writeGraph(randomGraph.graphScanDFS(randomGraph.getNodeWithID(r.getRandomNodeId())));
-//		
-//		Tree dfsTree = d.depthFirstSearch(d.getNodeWithID(1));
-//		
-//		System.out.println("DFS-Baum:\n" + dfsTree);
-//		
-//		Tree bfsTree = d.breadthFirstSearch(d.getNodeWithID(1));
-//		
-//		System.out.println("BFS-Baum:");
-//		System.out.println(bfsTree);
-//		
-//		Tree dfsTree2 = d.graphScanDFS(d.getNodeWithID(4));
-//		
-//		System.out.println("DFS-Baum:\n" + dfsTree2);
-//		
-//		Tree bfsTree2 = d.breadthFirstSearch(d.getNodeWithID(4));
-//		
-//		System.out.println("BFS-Baum:");
-//		System.out.println(bfsTree2);
-//		
-//		RandomDiGraph r = new RandomDiGraph(100, 250);
-//		
-//		DiGraph randomGraph = r.getRandomDiGraph();
-//		DiGraph randomGraph = r.getRandomAcyclicDiGraph();
-//		
-//		System.out.println("#########################\nRandomGraph:\n" + randomGraph);
-//		
-//		System.out.println(randomGraph.graphScanDFS(randomGraph.getNodeWithID(r.getRandomInt(0, 99))));
-		
-		System.out.println("Test finished..");
-		}
-	
 }
