@@ -343,7 +343,7 @@ public class DiGraph extends LinkedList<Node> {
 	 * cycleFound auf TRUE, wenn ein Zyklus existiert.
 	 * @return TRUE, wenn ein Kreis existiert
 	 */
-	private boolean cycleExists() {
+	public boolean cycleExists() {
 		
 		this.resetLabels();
 		
@@ -415,10 +415,33 @@ public class DiGraph extends LinkedList<Node> {
 	 * sollte nach jedem Graph-Algorithmus ausgeführt werden, um den
 	 * Ursprungszustand des Graphen wieder herzustellen.
 	 */
-	private void resetLabels() {
+	public void resetLabels() {
 		for (Node node : this) {
 			node.resetLabels();
 		}
+	}
+	
+	public LinkedList<Node> getCyclePath() {
+		if(this.cycleFound) {
+			// Wenn ein Zyklus gefunden wurde,
+			// lösche die Knoten in cyclePath, die nicht zum zyklus gehören
+			
+			int cylceNodeId = this.cyclePath.get(this.cyclePath.size()-1).Id;	// ID des Knotens, bei dem der Zyklus entdeckt wurde
+			int pathLength = this.cyclePath.size();
+			
+			for (int i = 0; i < pathLength; i++) {
+				// lösche alle Knoten in cyclePath bis zum ersten Auftreten des Knotens mit der ID cycleNodeId
+				if(this.cyclePath.getFirst().Id != cylceNodeId) {
+					this.cyclePath.removeFirst();
+					continue;
+				} else {
+					// Zyklusanfang gefunden, cyclePath enthält nur Knoten, die zum Zyklus gehören
+					break;
+				}
+			}
+			return this.cyclePath;
+		}
+		return null;
 	}
 	
 	/**
@@ -426,6 +449,10 @@ public class DiGraph extends LinkedList<Node> {
 	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder("n " + this.size() + " m " + this.edgeAmount);
+		
+		this.forEach((Node node) -> {
+			sb.append("\n" + node.outputString());
+		});
 		
 		this.forEach((Node node) -> {
 			if(node.outEdges.size() > 0) {

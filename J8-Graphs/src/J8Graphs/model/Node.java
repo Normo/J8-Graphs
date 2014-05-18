@@ -8,7 +8,7 @@ import java.util.LinkedList;
  * @author normo
  *
  */
-public class Node implements Comparable<Node>{
+public class Node {
 
 	/**
 	 * Knotennummer
@@ -67,6 +67,11 @@ public class Node implements Comparable<Node>{
 	 * den binären Heap beim Dijkstra-Algorithmus
 	 */
 	public int distance;
+	
+	/**
+	 * Vorgängerknoten.
+	 */
+	public Node pred;
 	
 	/**
 	 * Konstruktor.
@@ -178,6 +183,8 @@ public class Node implements Comparable<Node>{
 		this.isVisited = false;
 		this.discoverTime = -1;
 		this.finishTime = -1;
+		this.distance = Integer.MAX_VALUE;
+		this.pred = null;
 	}
 	
 	/**
@@ -187,15 +194,9 @@ public class Node implements Comparable<Node>{
 		//return "Node " + this.Id + " [Degree: " + this.getDegree() + ", visited: " + this.visited + ", finished: " + this.finished + "]";
 		return "" + this.Id;
 	}
-
-	@Override
-	public int compareTo(Node o) {
-		if (this.distance < o.distance) {
-			return -1;
-		} else if (this.distance > o.distance) {
-			return 1;
-		} else {
-			return 0;
-		}
+	
+	public String outputString() {
+		return "v " + this.Id + " " + this.xCoord + " " + this.yCoord;
 	}
+	
 }

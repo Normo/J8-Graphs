@@ -2,7 +2,10 @@ package J8Graphs.util;
 
 import J8Graphs.model.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.stream.Stream;
@@ -19,7 +22,7 @@ public class GraphReader {
 	DiGraph resultGraph;
 	
 	/**
-	 * Konstruktor.
+	 * Standard-Konstruktor.
 	 * @param filePath Dateipfad
 	 */
 	public GraphReader(String filePath) {
@@ -65,6 +68,63 @@ public class GraphReader {
 			e.printStackTrace();
 		}
 	};
+	
+	/**
+	 * Alternativer Konstruktor, der eine Einlese-Methode ohne Streams und
+	 * Lambda-Ausdrücke verwendet. Ist i.d.R. langsamer als der 
+	 * Standard-Konstruktor.
+	 * @param filePath Pfad zur Input-Datei
+	 * @param var dient nur zum Unterschied der Konstruktor-Signatur
+	 */
+	public GraphReader(String filePath, boolean var) {
+		
+		File file = new File(filePath);
+		this.resultGraph = new DiGraph();
+		
+		if(!file.exists()) {
+			System.out.println("Datei " + filePath +" existiert nicht!");
+			System.exit(1);
+		}
+		
+		BufferedReader in = null;
+		String line;
+		String[] splittedLine;
+		
+		try {
+			in = new BufferedReader(new FileReader(file));
+			
+			while ((line = in.readLine()) != null) {
+				splittedLine = line.split("\\s");
+				
+				if (splittedLine[0].equals("e")) {
+					createNewEdge(splittedLine);
+				} else if (splittedLine[0].equals("v")) {
+					createNewNode(splittedLine);
+				} else if (splittedLine[0].equals("n"))	{					
+					try {
+						this.resultGraph.nodeAmount = Integer.parseInt(splittedLine[1]);
+						this.resultGraph.edgeAmount = Integer.parseInt(splittedLine[3]);
+					} catch (NumberFormatException e) {
+						System.out.printf("[Fehler]: %s\n", e);
+						System.out.println("\tFür Knoten- oder Kantenanzahl wurde ein ungültiger Wert angegeben!");
+						System.out.println("\tErlaubte Werte liegen zwischen 0 und " + Integer.MAX_VALUE + ".\n");
+						System.out.println("Beende Programm!");
+						System.exit(1);
+					}
+				}
+				
+			}
+			
+			in.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	/**
 	 * Wertet eine Zeile aus, die eine neue Kante enthält. Das neue Kantenobjekt

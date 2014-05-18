@@ -21,15 +21,14 @@ public class RandomGraphCreator {
 				System.exit(1);
 			}
 			
-			RandomDiGraph randomGraph = new RandomDiGraph(nodeAmount, edgeAmount);
 			GraphWriter gw = new GraphWriter(path);
 			
 			if (args.length > 3 && args[3].equals("azyklisch")) {
 				System.out.println("Erzeuge zufälligen azyklischen gerichteten Graphen mit " + nodeAmount + " Knoten und " + edgeAmount + " Kanten.");
-				gw.writeGraph(randomGraph.getAcyclicRandomDiGraph());
+				gw.writeGraph(RandomDiGraph.getAcyclicRandomDiGraph(nodeAmount, edgeAmount));
 			} else {
 				System.out.println("Erzeuge zufälligen gerichteten Graphen mit " + nodeAmount + " Knoten und " + edgeAmount + " Kanten.");
-				gw.writeGraph(randomGraph.getRandomDiGraph());
+				gw.writeGraph(RandomDiGraph.getRandomDiGraph(nodeAmount, edgeAmount));
 			}
 			
 			System.out.println("Ergebnis in Outputdatei: " + path);

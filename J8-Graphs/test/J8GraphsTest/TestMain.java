@@ -1,9 +1,11 @@
 package J8GraphsTest;
 
+import J8Graphs.algorithms.Dijkstra;
 import J8Graphs.model.DiGraph;
 import J8Graphs.model.Node;
 import J8Graphs.util.BinaryHeap;
 import J8Graphs.util.GraphReader;
+import J8Graphs.util.RandomDiGraph;
 
 public class TestMain {
 
@@ -11,7 +13,7 @@ public class TestMain {
 	static final String graphWithCycles = "data/DummyGraph2.dat";
 	static final String graphTopologicalOrder = "data/DummyGraph3.dat";
 	static final String graphWithUniqueCycle = "data/DummyGraph4.dat";
-	static final String bigTestGraph1 = "data/n100000_m400000.txt";
+	static final String bigTestGraph1 = "data/n100000_m400000.out";
 
 	public static void testBinaryHeap() {
 		//		BinaryNodeHeap bHeap = new BinaryNodeHeap();
@@ -132,7 +134,20 @@ public class TestMain {
 		DiGraph d = gr.getDiGraph();
 		System.out.println(d);
 		
-		testBinaryHeap();
+//		testBinaryHeap();
+		
+		Dijkstra dijkstra = new Dijkstra(d);
+		dijkstra.standardDijkstra(d.getFirst(), d.getLast());
+		
+		DiGraph d2 = RandomDiGraph.getUncoordinatedRandomDiGraph(10000, 30000, true);
+		System.out.println(d2);
+		
+		if (d2.cycleExists()) {
+			System.out.println("Zyklus!!");
+			System.out.println(d2.getCyclePath());
+		} else {
+			System.out.println("kein Zyklus!!");
+		}
 		
 //		System.out.println(d.topologicalSorting());
 //		ArrayList<Tree> forest = d.depthFirstSearch(d.getNodeWithID(1));		
