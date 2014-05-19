@@ -30,7 +30,7 @@ public class Main {
 			System.out.println(graph);
 			
 			// Graph Scan Algorithmus ausgehend von ersten Knoten des Graphen und Ausgabe des resultierenden DFS-Baums
-			Tree dfsBaum = graph.graphScanDFS(graph.getFirst());
+			Tree dfsBaum = graph.graphScanDFS(graph.get(0));
 			System.out.println("\nDFS-Baum:");
 			System.out.println(dfsBaum);
 			

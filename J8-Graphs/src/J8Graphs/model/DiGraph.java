@@ -14,7 +14,7 @@ import J8Graphs.model.tree.Tree;
  * @author normo
  *
  */
-public class DiGraph extends LinkedList<Node> {
+public class DiGraph extends ArrayList<Node> {
 
 	/**
 	 * Default serial Version UID
@@ -108,7 +108,9 @@ public class DiGraph extends LinkedList<Node> {
 	 * @param node Neuer Knoten, der hinzugefügt werden soll
 	 */
 	public void insertFirstNode(Node node) {
-		this.addFirst(node);
+		//XXX
+		//this.addFirst(node);
+		this.add(0, node);
 		this.nodeAmount = this.size();
 	}
 	
@@ -330,7 +332,9 @@ public class DiGraph extends LinkedList<Node> {
 			// wenn kein Zyklus existiert, führe Tiefensuche mit Timestamps durch
 			// immer wenn ein Knoten eine Finish-Zeit erhält wird er vorne an die topoSort-Liste angefügt
 			long start = new Date().getTime();
-			this.depthFirstSearch(this.getFirst());
+			//XXX
+//			this.depthFirstSearch(this.getFirst());
+			this.depthFirstSearch(this.get(0));
 			long runningTime = new Date().getTime() - start;
 			System.out.println("Laufzeit: " + runningTime + " ms");
 			//return this.topoSort;
@@ -349,8 +353,10 @@ public class DiGraph extends LinkedList<Node> {
 		
 		this.cyclePath = new LinkedList<>();
 		
-		this.cycleDFS(this.getFirst());
-
+		//XXX
+//		this.cycleDFS(this.getFirst());
+		this.cycleDFS(this.get(0));
+		
 		if (this.cycleFound) {
 			return true;
 		} else {
@@ -442,6 +448,16 @@ public class DiGraph extends LinkedList<Node> {
 			return this.cyclePath;
 		}
 		return null;
+	}
+	
+	public int getLongestEdgeLength() {
+		int max = -1;
+		
+		for (Node node : this) {
+			max = (node.lengthOfLongestEdge > max)? node.lengthOfLongestEdge : max ;
+		}
+		
+		return max;
 	}
 	
 	/**

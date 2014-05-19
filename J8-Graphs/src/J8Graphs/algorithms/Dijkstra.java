@@ -1,5 +1,9 @@
 package J8Graphs.algorithms;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+
 import J8Graphs.model.DiGraph;
 import J8Graphs.model.Edge;
 import J8Graphs.model.Node;
@@ -34,6 +38,8 @@ public class Dijkstra {
 		Node neighbor;				// möglicher Nachbarknoten von currentNode
 		int deleteMinCounter = 0;	// Zähler für deleteMin-Operationen
 		
+		long start = new Date().getTime();
+		
 		while (!queue.isEmpty()) {
 			currentNode = queue.deleteMin();		// hole den nächsten ereichbaren Knoten
 			deleteMinCounter++;
@@ -62,24 +68,18 @@ public class Dijkstra {
 					}
 				}
 			}
-//			System.out.println(queue);
 		}
+		long runningTime = new Date().getTime() - start;
 		
-//		Node node = targetNode;
-//		
-//		System.out.print(" Pfad: " + node.Id);
-//		
-//		while (node != startNode) {
-//			node= node.pred;
-//			System.out.print(", " + node.Id);
-//			if (node == null) break;
-//		}
-//		System.out.println();
+//		printReversePath(targetNode);
+		
 		if (targetNode.distance < Integer.MAX_VALUE) {
 			System.out.println("Kürzester s-t-Weg: " + targetNode.distance + "\nAnzahl der deleteMin-Operationen: " + deleteMinCounter);
 		} else {
 			System.out.println("Es gibt keinen kürzesten s-t-Weg!" + "\nAnzahl der deleteMin-Operationen: " + deleteMinCounter);
 		}
+		
+		System.out.println("Laufzeit Standard-Dijkstra: " + runningTime + " ms\n\n");
 		
 		
 	}
@@ -106,14 +106,15 @@ public class Dijkstra {
 		sQueue.insert(startNode);
 		tQueue.insert(targetNode);
 
-		Node currentNode = null;			// der in der Iteration aktuell betrachtete Knoten
+		Node currentNode = null;	// der in der Iteration aktuell betrachtete Knoten
 		Node neighbor;				// möglicher Nachbarknoten von currentNode
 		int deleteMinCounter = 0;	// Zähler für deleteMin-Operationen
-		boolean isForwardSearch;
+		
+		long start = new Date().getTime();
 		
 		while (!sQueue.isEmpty() || !tQueue.isEmpty()) {
 			
-			if (!sQueue.isEmpty() && sQueue.findMin().distance <= tQueue.findMin().distanceBackward) {
+			if (!sQueue.isEmpty() && !tQueue.isEmpty() && sQueue.findMin().distance <= tQueue.findMin().distanceBackward) {
 				currentNode = sQueue.deleteMin();
 //				System.out.println("Node " + currentNode + " removed from Q_s with distance " + currentNode.distance);
 				deleteMinCounter++;
@@ -142,7 +143,7 @@ public class Dijkstra {
 						}
 					}
 				}
-			} else {
+			} else if (!tQueue.isEmpty()) {
 				currentNode = tQueue.deleteMin();
 				deleteMinCounter++;
 //				System.out.println("Node " + currentNode + " removed from Q_ts with distance " + currentNode.distanceBackward);
@@ -171,6 +172,8 @@ public class Dijkstra {
 						}
 					}
 				}
+			} else {
+				break;
 			}
 		}
 		
@@ -192,7 +195,137 @@ public class Dijkstra {
 		} else {
 			System.out.println("Es gibt keinen kürzesten s-t-Weg!" + "\nAnzahl der deleteMin-Operationen: " + deleteMinCounter);
 		}
+		long runningTime = new Date().getTime() - start;
+		System.out.println("Laufzeit Bidirektional-Dijkstra: " + runningTime + " ms\n\n");
 		
+	}
+
+	public static void dialsImplementation(DiGraph graph, Node startNode, Node targetNode) {
+
+		ArrayList<LinkedList<Node>> bucketList = new ArrayList<>();
+		int upperBound_C = graph.getLongestEdgeLength();
+
+		for (int i = 0; i < upperBound_C+1; i++) {
+			bucketList.add(new LinkedList<>());
+		}
+
+		graph.resetLabels();
+		startNode.distance = 0;
+		startNode.pred = null;
+		startNode.bucketPointer = 0;
+		bucketList.get(0).add(startNode);	// Startknoten liegt im Bucket 0
+
+		Node currentNode = startNode;			// der in der Iteration aktuell betrachtete Knoten
+		Node neighbor;						// möglicher Nachbarknoten von currentNode
+		int deleteMinCounter = 0;			// Zähler für deleteMin-Operationen	
+
+		int lastBucketPointer = 0;
+		boolean nodeFound;
+		
+		long start = new Date().getTime();
+		
+		while (true) {
+
+			nodeFound = false;
+			for (int i = lastBucketPointer; i < bucketList.size(); i++) {
+				if(!bucketList.get(i).isEmpty()) {
+					currentNode = bucketList.get(i).poll();
+					deleteMinCounter++;
+					nodeFound = true;
+					lastBucketPointer = i;
+//					System.out.println("CurrentNode: " +currentNode + " dist= " + currentNode.distance);
+					break;
+				}
+			} 
+			if (!nodeFound) {
+				for (int i = 0; i < lastBucketPointer; i++) {
+					if(!bucketList.get(i).isEmpty()) {
+						currentNode = bucketList.get(i).poll();
+						deleteMinCounter++;
+						nodeFound = true;
+						lastBucketPointer = i;
+//						System.out.println("CurrentNode: " +currentNode + " dist= " + currentNode.distance);
+						break;
+					}
+				} 
+			}
+			
+			if (!nodeFound) { break; }
+			
+			// vorzeitiger Abbruch
+			if(currentNode.Id == targetNode.Id) {
+				break;
+			}
+			
+			// iteriere über die erreichbaren Nachbarknoten
+			for (Edge outEdge : currentNode.outEdges) {
+				
+				neighbor = outEdge.targetNode;
+
+//				if(neighbor.Id == targetNode.Id) {
+//					System.out.println("Distanz: " + neighbor.distance);
+//				}
+
+//				System.out.print("\t aktuelle Distanz: "+ neighbor.distance +" > " + currentNode.distance +"+"+ outEdge.length);
+				if (neighbor.distance > currentNode.distance + outEdge.length) {
+					if (neighbor.distance == Integer.MAX_VALUE) {
+						neighbor.distance = currentNode.distance + outEdge.length;
+						neighbor.pred = currentNode;
+						neighbor.bucketPointer = neighbor.distance % (upperBound_C + 1);
+//						System.out.println("BucketPointer: " + neighbor.bucketPointer);
+						bucketList.get(neighbor.bucketPointer).add(neighbor);
+					} else {
+						neighbor.distance = currentNode.distance + outEdge.length;
+						neighbor.pred = currentNode;
+						bucketList.get(neighbor.bucketPointer).remove(neighbor);
+						neighbor.bucketPointer = neighbor.distance % (upperBound_C + 1);
+//						neighbor.bucketPointer = neighbor.distance % currentNode.distance;
+//						System.out.println("BucketPointer: " + neighbor.bucketPointer);
+						bucketList.get(neighbor.bucketPointer).add(neighbor);
+					}
+				}
+				
+//				System.out.println("Neighbor: "+ neighbor + " dist= " + neighbor.distance + " BucketPointer: " + neighbor.bucketPointer);
+			}
+		}
+		long runningTime = new Date().getTime() - start;
+		
+		
+		if (targetNode.distance < Integer.MAX_VALUE) {
+			System.out.println("Kürzester s-t-Weg: " + targetNode.distance + "\nAnzahl der deleteMin-Operationen: " + deleteMinCounter);
+		} else {
+			System.out.println("Es gibt keinen kürzesten s-t-Weg!" + "\nAnzahl der deleteMin-Operationen: " + deleteMinCounter);
+		}
+		System.out.println("Laufzeit Dials-Implementierung: " + runningTime + " ms\n\n");
+//		printReversePath(targetNode);
+	}
+	
+	/**
+	 * Gibt rekursiv die Vorgängerknoten und die Kantenlängen auf Konsole aus.
+	 * Bricht ab, wenn Vorgängerknoten null ist. Das Ergebnis ist ein 
+	 * Rückwärtspfad. Nützlich zum Debuggen.
+	 * @param node Startknoten des Rückwärtspfades
+	 */
+	@SuppressWarnings("unused")
+	private static void printReversePath(Node node) {
+		Node currentNode = node;
+		if (currentNode.pred == null) return;
+		System.out.print(" Pfad: " + currentNode.Id);
+		for (Edge  edge : currentNode.inEdges) {
+			if (edge.startNode == currentNode.pred) {
+				System.out.print(" [" + edge.length + "] ");
+			}
+		}
+		
+		while ((currentNode=currentNode.pred) != null) {
+			System.out.print(", " + currentNode.Id);
+			for (Edge  edge : currentNode.inEdges) {
+				if (edge.startNode == currentNode.pred) {
+					System.out.print(" [" + edge.length + "] ");
+				}
+			}
+		}
+		System.out.println();
 	}
 
 }

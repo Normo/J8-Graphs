@@ -2,6 +2,7 @@ package J8Graphs.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
@@ -34,7 +35,13 @@ public class GraphWriter {
 	 */
 	public void writeGraph(DiGraph graph) {
 		try {
-			Files.write(new File(this.outputFile).toPath(), graph.toString().getBytes(), StandardOpenOption.CREATE);
+			Files.write(new File(this.outputFile).toPath(), graph.toString().getBytes(), StandardOpenOption.CREATE_NEW);
+		} catch (FileAlreadyExistsException e) {
+			System.out.printf("[Fehler]: %s\n", e);
+			System.out.println("\tDie Datei " + this.outputFile + " existiert bereits!");
+			System.out.println("\tBenennen Sie diese um oder löschen Sie die Datei.\n");
+			System.out.println("Beende Programm!");
+			System.exit(1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

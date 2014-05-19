@@ -49,6 +49,10 @@ public class Edge {
 			length = Math.abs(this.startNode.xCoord - this.targetNode.xCoord)
 					+ Math.abs(this.startNode.yCoord - this.targetNode.yCoord);
 		}
+		if(length < 0) {
+			System.out.println("Siehe da: " + this + " Länge: " + length);
+			length = Integer.MAX_VALUE;
+		}
 	}
 	
 	/**

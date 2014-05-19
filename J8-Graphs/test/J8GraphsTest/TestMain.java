@@ -27,9 +27,16 @@ public class TestMain {
 
 		//		testBinaryHeap();
 		long start = new Date().getTime();
-		DiGraph d2 = new GraphReader(true, "data/randomgraph.out").getDiGraph();
+		DiGraph d2 = new GraphReader(true, "data/randomgraph2.out").getDiGraph();
 		long runningTime = new Date().getTime() - start;
 		System.out.println("Laufzeit Graph einlesen: " + runningTime + " ms\n\n");
+		
+		start = new Date().getTime();
+		int l = d2.getLongestEdgeLength();
+		runningTime = new Date().getTime() - start;
+		System.out.println("Längste Kantenlänge: " + l);
+		System.out.println("Laufzeit längste Kante finden: " + runningTime + " ms\n\n");
+		
 //		if (!d2.graphScanDFS(d2.getFirst()).contains(d2.getLast())) {
 //			System.out.println("Nicht erreichbar!!");
 //		};
@@ -40,14 +47,15 @@ public class TestMain {
 //			});
 //		});
 		
-		start = new Date().getTime();
-		Dijkstra.standardDijkstra(d2, d2.getFirst(), d2.getLast());
-		runningTime = new Date().getTime() - start;
-		System.out.println("Laufzeit Standard-Dijkstra: " + runningTime + " ms\n\n");
-		start = new Date().getTime();
-		Dijkstra.bidirectionalDijkstra(d2, d2.getFirst(), d2.getLast());
-		runningTime = new Date().getTime() - start;
-		System.out.println("Laufzeit Bidirektional-Dijkstra: " + runningTime + " ms\n\n");
+		Node s = d2.get(0);
+		Node t = d2.getNodeWithID(d2.nodeAmount-1);
+		
+
+		Dijkstra.standardDijkstra(d2, s, t);
+
+		Dijkstra.bidirectionalDijkstra(d2, s, t);
+
+		Dijkstra.dialsImplementation(d2, s,t);
 
 		//		System.out.println(d.topologicalSorting());
 		//		ArrayList<Tree> forest = d.depthFirstSearch(d.getNodeWithID(1));		

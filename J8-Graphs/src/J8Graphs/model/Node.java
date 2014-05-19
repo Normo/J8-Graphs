@@ -74,6 +74,16 @@ public class Node {
 	public int distanceBackward;
 	
 	/**
+	 * Speichert die Länge der längsten inzidenten Kante.
+	 */
+	public int lengthOfLongestEdge;
+	
+	/**
+	 * Index der auf die Position in der zugehörigen Bucket-Liste zeigt,
+	 */
+	public int bucketPointer;
+	
+	/**
 	 * Vorgängerknoten.
 	 */
 	public Node pred;
@@ -92,6 +102,7 @@ public class Node {
 		this.distance = Integer.MAX_VALUE;
 		this.pred = null;
 		this.distanceBackward = Integer.MAX_VALUE;
+		this.lengthOfLongestEdge = -1;
 	}
 	
 	/**
@@ -112,6 +123,7 @@ public class Node {
 		this.distance = Integer.MAX_VALUE;
 		this.pred = null;
 		this.distanceBackward = Integer.MAX_VALUE;
+		this.lengthOfLongestEdge = -1;
 	}
 	
 	/**
@@ -136,6 +148,8 @@ public class Node {
 	 */
 	public void addIncomingEdge(Edge inEdge) {
 		this.inEdges.add(inEdge);
+		if (inEdge.length > this.lengthOfLongestEdge)
+			this.lengthOfLongestEdge = inEdge.length;
 	}
 	
 	/**
@@ -144,6 +158,8 @@ public class Node {
 	 */
 	public void addOutgoingEdge(Edge outEdge) {
 		this.outEdges.add(outEdge);
+		if (outEdge.length > this.lengthOfLongestEdge)
+			this.lengthOfLongestEdge = outEdge.length;
 	}
 	
 	/**
