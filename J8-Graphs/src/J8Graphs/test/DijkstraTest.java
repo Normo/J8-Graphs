@@ -1,4 +1,4 @@
-package J8GraphsTest;
+package J8Graphs.test;
 
 import java.util.Date;
 
@@ -27,8 +27,8 @@ public class DijkstraTest {
 		
 		System.out.println("##########################################");
 		
-		Node s = graph.get(0);
-		Node t = graph.getNodeWithID(100);
+		Node s = graph.get(1);
+		Node t = graph.getNodeWithID(graph.nodeAmount-1);
 		
 		Dijkstra.standardDijkstra(graph, s, t, true);
 		
