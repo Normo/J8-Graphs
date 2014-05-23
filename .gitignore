@@ -84,3 +84,6 @@ local.properties
 .buildpath
 
 *.out
+/J8-Graphs/nbproject/private/
+/J8-Graphs/build/
+/J8-Graphs/dist/
