@@ -76,7 +76,7 @@ public class Node {
 	/**
 	 * Speichert die Länge der längsten inzidenten Kante.
 	 */
-	public int lengthOfLongestEdge;
+	public int maxEgdeLength;
 	
 	/**
 	 * Index der auf die Position in der zugehörigen Bucket-Liste zeigt,
@@ -87,6 +87,11 @@ public class Node {
 	 * Vorgängerknoten.
 	 */
 	public Node pred;
+	
+	/**
+	 * Unter Schranke für zielgerichtete Suche
+	 */
+	public int lowerBound;
 	
 	/**
 	 * Konstruktor.
@@ -102,7 +107,9 @@ public class Node {
 		this.distance = Integer.MAX_VALUE;
 		this.pred = null;
 		this.distanceBackward = Integer.MAX_VALUE;
-		this.lengthOfLongestEdge = -1;
+		this.maxEgdeLength = -1;
+		this.bucketPointer = -1;
+		this.lowerBound = -1;
 	}
 	
 	/**
@@ -123,7 +130,9 @@ public class Node {
 		this.distance = Integer.MAX_VALUE;
 		this.pred = null;
 		this.distanceBackward = Integer.MAX_VALUE;
-		this.lengthOfLongestEdge = -1;
+		this.maxEgdeLength = -1;
+		this.bucketPointer = -1;
+		this.lowerBound = -1;
 	}
 	
 	/**
@@ -148,8 +157,8 @@ public class Node {
 	 */
 	public void addIncomingEdge(Edge inEdge) {
 		this.inEdges.add(inEdge);
-		if (inEdge.length > this.lengthOfLongestEdge)
-			this.lengthOfLongestEdge = inEdge.length;
+		if (inEdge.length > this.maxEgdeLength)
+			this.maxEgdeLength = inEdge.length;
 	}
 	
 	/**
@@ -158,8 +167,8 @@ public class Node {
 	 */
 	public void addOutgoingEdge(Edge outEdge) {
 		this.outEdges.add(outEdge);
-		if (outEdge.length > this.lengthOfLongestEdge)
-			this.lengthOfLongestEdge = outEdge.length;
+		if (outEdge.length > this.maxEgdeLength)
+			this.maxEgdeLength = outEdge.length;
 	}
 	
 	/**
@@ -213,6 +222,8 @@ public class Node {
 		this.distance = Integer.MAX_VALUE;
 		this.pred = null;
 		this.distanceBackward = Integer.MAX_VALUE;
+		this.bucketPointer = -1;
+		this.lowerBound = -1;
 	}
 	
 	/**

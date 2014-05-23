@@ -31,6 +31,11 @@ public class Edge {
 	 * berechnet.
 	 */
 	public int length;
+	
+	/**
+	 * Modifizierte Kantenlänge für zielgerichtete Suche.
+	 */
+	public int modifiedLength;
 
 	/**
 	 * Konstruktor.

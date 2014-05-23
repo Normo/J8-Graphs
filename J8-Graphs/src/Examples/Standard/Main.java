@@ -1,4 +1,4 @@
-package J8Graphs;
+package Examples.Standard;
 
 import java.util.ArrayList;
 

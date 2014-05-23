@@ -450,11 +450,11 @@ public class DiGraph extends ArrayList<Node> {
 		return null;
 	}
 	
-	public int getLongestEdgeLength() {
+	public int getMaxEdgeLength() {
 		int max = -1;
 		
 		for (Node node : this) {
-			max = (node.lengthOfLongestEdge > max)? node.lengthOfLongestEdge : max ;
+			max = (node.maxEgdeLength > max)? node.maxEgdeLength : max ;
 		}
 		
 		return max;
